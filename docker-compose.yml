@@ -1,0 +1,16 @@
+version: '3.3'
+services:
+  fastapi:
+    build:
+      context: .
+      dockerfile: ./docker/fastapi/Dockerfile
+    container_name: forgenode_fastapi
+    volumes:
+      - ./app:/forgenode/app
+      - ./mnt:/forgenode/mnt
+
+volumes:
+  app:
+    driver: local
+  mnt:
+    driver: local

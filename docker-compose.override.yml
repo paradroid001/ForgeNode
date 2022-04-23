@@ -1,0 +1,5 @@
+version: '3.3'
+services:
+  fastapi:
+    ports:
+      - "${FASTAPI_PORT}:8000"
