@@ -15,6 +15,20 @@ async def read_config():
     #filepath = os.path.join(settings.root_path, '../mnt/')
     return get_config()
 
+@router.get("/list/")
+async def list_config():
+    #filepath = os.path.join(os.path.dirname(os.path.realpath(__file__)))
+    #filepath = os.path.join(settings.root_path, '../mnt/')
+    config = get_config()
+    ret = [
+        {   "name": toolname,
+            "url": f"/{toolname}/run/",
+            "description": "yeah"} 
+        for toolname in config]
+    return ret
+
+
+
 @router.get("/{name}")
 async def read_named_config(name:str):
     config = get_config()
