@@ -28,10 +28,10 @@ async def add_tool(
         tool_root_dir: str,
         tool_cmd: str,
         tool_args: Optional[List[str]],
+        tool_description: Optional[str] = None,
         settings:Settings = Depends(get_settings)):
     thisnode: ForgeNode = settings.config
-    print(f"the node is {thisnode}")
-    tool = ForgeTool(name=tool_name, root=tool_root_dir, command=tool_cmd, args = tool_args)
+    tool = ForgeTool(name=tool_name, root=tool_root_dir, command=tool_cmd, args = tool_args, description=tool_description)
     thisnode.tools[tool_name] = tool
     settings.write_config()
 
@@ -42,6 +42,7 @@ async def edit_tool(
         tool_root_dir: Optional[str]=None,
         tool_cmd: Optional[str]=None,
         tool_args: Optional[List[str]]=None,
+        tool_description: Optional[str] = None,
         settings:Settings = Depends(get_settings)):
     if tool_name not in settings.config.tools:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
@@ -55,8 +56,10 @@ async def edit_tool(
             tool.args = tool_args
         if new_tool_name is not None:
             tool.name = new_tool_name
-            del tools[tool_name]
+            settings.config.tools.pop(tool_name) #pop old tool name
             settings.config.tools[new_tool_name] = tool
+        if tool_description is not None:
+            tool.description = tool_description
         settings.write_config()
         
     
