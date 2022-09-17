@@ -22,6 +22,7 @@ async def read_config(settings: Settings = Depends(get_settings)):
 @router.get("/list/")
 async def list_config(settings: Settings = Depends(get_settings)) -> List[ForgeTool]:
     tools: Dict[str:ForgeTool] = settings.config.tools
+    print(tools)
     return [item for item in settings.config.tools.values()]
 
 
@@ -96,15 +97,21 @@ async def run_tool(tool_name: str,
                             detail=f"Tool {tool_name} not found")
     else:
         toolconfig: ForgeTool = settings.config.tools[tool_name]
-        print(f"mnt path is {settings.mnt_path}")
-        cwd = os.path.join(settings.mnt_path,
-                           toolconfig.root.replace("/mnt/", ""))
-        print(f"tool cwd is {cwd}")
         cmd = toolconfig.command
+        f = cmd
+        cwd = None
+        if toolconfig.root is not None:
+            print(f"mnt path is {settings.mnt_path}")
+            cwd = os.path.join(settings.mnt_path,
+                               toolconfig.root.replace("/mnt/", ""))
+            f = os.path.join(cwd, cmd)
+        print(f"tool cwd is {cwd}")
+
         args = toolconfig.args
         kwargs = {}
-        f = os.path.join(cwd, cmd)
-        command = f"{f} {args}"
+
+        # command = f"{f} {args}" #don't process args for now.
+        command = f"{f}"
         print(f"The command was {command}")
         (proc, out, err) = await execute_command(command)
         print(out)
