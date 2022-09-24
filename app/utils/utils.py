@@ -15,6 +15,10 @@ def get_ram_load():
     return {'total': total_memory, 'used': used_memory, 'free': free_memory}
 
 
+# executes a shell command and captures output
+# See shell.py of the naked toolshed (https://github.com/chrissimpkins/naked/blob/master/lib/Naked/toolshed/shell.py)
+
+
 async def execute_command(cmd: str):
     try:
         proc = subprocess.Popen(cmd, shell=True,
@@ -34,3 +38,14 @@ async def execute_command(cmd: str):
         sys.stderr.write(
             "unable to run the shell command with the execute() function.")
         raise e
+
+
+def execute_python_command(pythonbin, rootdir, pyfile, args, kwargs):
+    cwd = rootdir
+    code = pyfile
+    cmdargs = [arg for arg in args]
+    for kwarg in kwargs.keys():
+        cmdargs.append("-%s" % kwarg)
+        cmdargs.append("%s" % kwargs[kwarg])
+    proc_args = [pythonbin, code, *cmdargs]
+    return execute(proc_args, cwd)
