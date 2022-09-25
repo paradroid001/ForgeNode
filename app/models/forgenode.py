@@ -25,7 +25,7 @@ class ValueType(str, Enum):
 
 class PositionalValue(BaseModel):
     name: str
-    value: Union[Any | None]
+    value: Union[Any, None]
     value_type: ValueType
 
     def cmdline_str(self) -> str:
@@ -36,7 +36,7 @@ class PositionalValue(BaseModel):
 
 class FlaggedValue(PositionalValue):
     flag: str
-    value: Optional[Union[Any | None]]
+    value: Optional[Union[Any, None]]
     value_type: Optional[ValueType]
 
     def cmdline_str(self) -> str:
@@ -54,11 +54,11 @@ class OutputValue(BaseModel):
 
 class ForgeTool(BaseModel):
     name: str
-    root: Union[str | None]  # root dir
+    root: Union[str, None]  # root dir
     command: str  # command to run
     env_name: Optional[str]  # env name, for lookup
-    args: List[Union[PositionalValue | FlaggedValue]]  # args
-    output: Union[OutputValue | None]
+    args: List[Union[PositionalValue, FlaggedValue]]  # args
+    output: Union[OutputValue, None]
     description: Optional[str]
 
     env_cache: Optional[Union[VirtualEnv, Env]] = Field(
