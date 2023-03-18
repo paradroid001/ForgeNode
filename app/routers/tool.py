@@ -30,8 +30,8 @@ async def add_tool(
         tool_name: str,
         tool_root_dir: str,
         tool_cmd: str,
-        tool_args: Optional[List[Union[PositionalValue | FlaggedValue]]],
-        tool_output: Optional[Union[OutputValue | None]],
+        tool_args: Optional[List[Union[PositionalValue, FlaggedValue]]],
+        tool_output: Optional[Union[OutputValue, None]],
         tool_description: Optional[str] = None,
         settings: Settings = Depends(get_settings)):
     thisnode: ForgeNode = ForgeNode.load(settings)
@@ -47,9 +47,9 @@ async def edit_tool(
         new_tool_name: Optional[str] = None,
         tool_root_dir: Optional[str] = None,
         tool_cmd: Optional[str] = None,
-        tool_args: Optional[List[Union[PositionalValue |
+        tool_args: Optional[List[Union[PositionalValue,
                                        FlaggedValue]]] = None,
-        tool_output: Optional[Union[OutputValue | None]] = None,
+        tool_output: Optional[Union[OutputValue, None]] = None,
         tool_description: Optional[str] = None,
         settings: Settings = Depends(get_settings)):
     forgenode = ForgeNode.load(settings)
@@ -98,7 +98,7 @@ async def read_named_config(tool_name: str,
 
 @router.post("/run/{tool_name}/")
 async def run_tool(tool_name: str,
-                   args: List[Union[FlaggedValue | PositionalValue]],
+                   args: List[Union[FlaggedValue, PositionalValue]],
                    settings: Settings = Depends(get_settings)):
     forgenode = ForgeNode.load(settings)
     if tool_name not in forgenode.tools:
